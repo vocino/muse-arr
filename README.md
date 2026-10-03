@@ -37,6 +37,27 @@ Dashboard > API Keys > +.
 Pair in the Muse app: Settings > Devices > Developer mode on > + >
 `MuseGadgetXXXXXX`.
 
+## Where to install
+
+| Your setup | Install the gadget... |
+|---|---|
+| Ubuntu/Debian server | Directly on it (`apt` and `systemd` work; add a USB Bluetooth adapter if it has no BLE) |
+| Raspberry Pi | Directly on it (Bluetooth built in) |
+| Synology NAS | On a Pi on the LAN (DSM has no `apt`/`systemd`, and dropped Bluetooth support) |
+| Unraid | On a Pi on the LAN (no `apt`/`systemd`/Bluetooth) |
+| TrueNAS Scale | On a Pi on the LAN (appliance OS; host changes get wiped) |
+| Windows | On a Pi on the LAN (the SDK is Linux-only) |
+
+The media commands are plain HTTP, so any gadget on the LAN works. Point
+`media.env` at `http://<server-ip>:8989` and friends.
+
+### Keep it local
+
+- Never expose Sonarr/Radarr/Jellyfin to the internet. LAN or VPN only.
+- Turn on authentication in each app; don't rely on LAN obscurity.
+- API keys are secrets: they live in `/var/lib/musegadget/media.env`
+  (root, `chmod 600`), never in git. Rotate on any leak.
+
 ## Use
 
 - "Find the show Severance"
