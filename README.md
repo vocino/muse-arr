@@ -14,6 +14,8 @@ server blades don't have. The Pi pairs with your phone once, then drives
 the *arr and Jellyfin APIs over HTTP.
 
 ```sh
+git clone https://github.com/vocino/muse-arr.git
+cd muse-arr
 sudo useradd -m muse && sudo usermod -aG docker muse
 bash linux/install.sh --from linux --run-as muse --sdk-token mgst_…
 ```
