@@ -175,3 +175,14 @@ def test_unknown_action(monkeypatch):
     monkeypatch.setattr(media, "_load_config", lambda path=media.CONFIG_PATH: dict(CFG))
     with pytest.raises(MediaError, match="unsupported media action"):
         media.run("nope", {})
+
+
+def test_recent_uses_configured_user_id(monkeypatch):
+    captured = _fake_http(monkeypatch, [
+        ("GET", "/Users/user9/Items", {"Items": []}),
+    ])
+    cfg = dict(CFG, JELLYFIN_USER_ID="user9")
+    monkeypatch.setattr(media, "_load_config", lambda path=media.CONFIG_PATH: cfg)
+    out = media.run("recent", {})
+    assert out == {"recent": []}
+    assert not any("/Users/Me" in u for _, u, _ in captured)

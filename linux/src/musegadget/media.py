@@ -227,8 +227,10 @@ def queue(cfg: dict, params: dict) -> dict:
 
 def recent(cfg: dict, params: dict) -> dict:
     limit = params.get("limit") or 10
-    me = _jellyfin(cfg, "GET", "/Users/Me")
-    user_id = me["Id"]
+    user_id = cfg.get("JELLYFIN_USER_ID")
+    if not user_id:
+        me = _jellyfin(cfg, "GET", "/Users/Me")
+        user_id = me["Id"]
     query = urllib.parse.urlencode({
         "SortBy": "DateCreated", "SortOrder": "Descending",
         "IncludeItemTypes": "Movie,Episode", "Recursive": "true",
