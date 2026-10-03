@@ -3,15 +3,18 @@
 Talk to your *arr stack from the Muse app on your phone. Sonarr, Radarr,
 and Jellyfin, without SSHing into the server.
 
-Runs on a Raspberry Pi on your home LAN, via the [Muse Gadgets Linux
-SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache 2.0,
-vendored in `linux/`).
+Runs on any always-on Linux box on your home LAN, via the [Muse Gadgets
+Linux SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache
+2.0, vendored in `linux/`).
 
 ## Install
 
-Use a Pi, not the media server itself. Pairing needs Bluetooth LE, which
-server blades don't have. The Pi pairs with your phone once, then drives
-the *arr and Jellyfin APIs over HTTP.
+Install it on the machine running your *arr stack, or on a separate box.
+The only hard requirement is Bluetooth LE, which pairing needs. No
+Bluetooth on the server? Either plug in a USB Bluetooth adapter, or put it
+on a Raspberry Pi (any 3B+ or newer) on the same LAN. The media commands
+are plain HTTP, so the gadget drives your stack over the network either
+way.
 
 ```sh
 git clone https://github.com/vocino/muse-arr.git
