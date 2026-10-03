@@ -26,9 +26,6 @@ Radarr grabs it. No SSH, no web UI.
 Bluetooth is only for pairing: your phone needs to be next to the gadget
 once, to prove the box is yours. After that it's all internet.
 
-New to Muse? Install the Muse app, grab an SDK token at gadgets.muse.ai >
-Account > SDK tokens, then follow Install below.
-
 ## Install
 
 New to Muse? [muse.ai/join](https://muse.ai/join) takes an invite code in
@@ -67,6 +64,9 @@ Dashboard > API Keys > +.
 Pair in the Muse app: Settings > Devices > Developer mode on > + >
 `MuseGadgetXXXXXX`.
 
+Check it's alive: `sudo journalctl -u musegadget -f` and look for
+`registered with the Muse`.
+
 ## Where to install
 
 | Your setup | Install the gadget... |
@@ -79,7 +79,8 @@ Pair in the Muse app: Settings > Devices > Developer mode on > + >
 | Windows | On a Pi on the LAN (the SDK is Linux-only) |
 
 The media commands are plain HTTP, so any gadget on the LAN works. Point
-`media.env` at `http://<server-ip>:8989` and friends.
+`media.env` at your server's LAN IP and ports (`http://<server-ip>:8989`,
+and so on).
 
 ### Keep it local
 
@@ -121,6 +122,6 @@ cd linux && PYTHONPATH=src python3 -m pytest tests -q
 ## Provenance
 
 `linux/` is the Muse Gadgets Linux SDK, vendored. Our changes are marked
-`# --- muse-arr ---` in `src/musegadget/executor.py`; everything else we
-added is `src/musegadget/media.py`, `tests/test_media.py`, and
-`media.env.example`.
+`# --- muse-arr ---` in `linux/src/musegadget/executor.py`; everything else
+we added is `linux/src/musegadget/media.py`, `linux/tests/test_media.py`,
+and `linux/media.env.example`.
