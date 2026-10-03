@@ -7,6 +7,28 @@ Runs on any always-on Linux box on your home LAN, via the [Muse Gadgets
 Linux SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache
 2.0, vendored in `linux/`).
 
+## How it works
+
+Muse is Meta's AI assistant; it lives in an app on your phone. A Muse
+gadget is a small computer on your home network that Muse can send commands
+to.
+
+This gadget sits on your LAN and does two things:
+
+1. It talks to Sonarr, Radarr, and Jellyfin over plain HTTP, using the same
+   APIs their web UIs use.
+2. It holds an encrypted session to Muse over the internet, so your phone
+   reaches your media stack through it.
+
+You ask Muse for a movie. Muse tells the gadget. The gadget tells Radarr.
+Radarr grabs it. No SSH, no web UI.
+
+Bluetooth is only for pairing: your phone needs to be next to the gadget
+once, to prove the box is yours. After that it's all internet.
+
+New to Muse? Install the Muse app, grab an SDK token at gadgets.muse.ai >
+Account > SDK tokens, then follow Install below.
+
 ## Install
 
 Install it on the machine running your *arr stack, or on a separate box.
