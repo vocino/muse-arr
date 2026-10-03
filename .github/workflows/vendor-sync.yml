@@ -1,0 +1,82 @@
+name: vendor-sync
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch upstream
+        id: fetch
+        run: |
+          OLD_SHA=$(cat linux/.upstream-sha)
+          echo "old=$OLD_SHA" >> $GITHUB_ENV
+          rm -rf /tmp/upstream && git init -q /tmp/upstream
+          cd /tmp/upstream
+          git remote add origin https://github.com/facebookincubator/muse-gadget-sdk.git
+          git fetch -q --depth=1 origin "$OLD_SHA"
+          git fetch -q --depth=1 origin main
+          NEW_SHA=$(git rev-parse FETCH_HEAD)
+          echo "new=$NEW_SHA" >> $GITHUB_ENV
+          if git diff --quiet "$OLD_SHA" FETCH_HEAD -- linux/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            git diff "$OLD_SHA" FETCH_HEAD -- linux/ > /tmp/upstream.patch
+          fi
+
+      - name: Try applying upstream patch
+        id: apply
+        if: steps.fetch.outputs.changed == 'true'
+        run: |
+          if git apply --check /tmp/upstream.patch; then
+            echo "clean=true" >> $GITHUB_OUTPUT
+          else
+            echo "clean=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Apply patch and update pin
+        if: steps.apply.outputs.clean == 'true'
+        run: |
+          git apply /tmp/upstream.patch
+          echo "$new" > linux/.upstream-sha
+
+      - name: Test the merge
+        if: steps.apply.outputs.clean == 'true'
+        run: |
+          pip install "./linux[test]"
+          cd linux && python -m pytest tests -q
+          cd "$GITHUB_WORKSPACE" && shellcheck linux/install.sh
+
+      - name: Open sync PR
+        if: steps.apply.outputs.clean == 'true'
+        run: |
+          SHORT=${new:0:7}
+          BRANCH="vendor/sync-$SHORT"
+          git checkout -b "$BRANCH"
+          git add -A
+          git -c user.name=vocino -c user.email=65593+vocino@users.noreply.github.com \
+            commit -m "chore: sync vendored linux/ with upstream $SHORT"
+          git push -u origin "$BRANCH"
+          gh pr create --title "chore: sync vendored linux/ with upstream $SHORT" \
+            --body "Upstream \`linux/\` changed since \`$old\`. Patch applied cleanly around our \`# --- muse-arr ---\` sections; tests and shellcheck pass. Review the diff, then merge."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Open issue on conflict
+        if: steps.apply.outputs.clean == 'false'
+        run: |
+          SHORT=${new:0:7}
+          gh issue create \
+            --title "Upstream sync $SHORT needs manual resolution" \
+            --body "Upstream \`linux/\` changed in ways that conflict with our \`# --- muse-arr ---\` sections (\`$old\` → \`$new\`). The patch is at \`/tmp/upstream.patch\` on the failed run. Resolve by hand: apply what fits, keep our markers, update \`linux/.upstream-sha\`, run tests."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
