@@ -1,37 +1,36 @@
-# muse media gadget
+# muse-arr
 
-A Meta Muse gadget that runs your *arr stack and Jellyfin. Install it on a
-Raspberry Pi on your home LAN and manage your media server from the Muse app
-on your phone — no more SSHing into the box to add a show.
+Talk to your *arr stack from the Muse app on your phone. Sonarr, Radarr,
+and Jellyfin, without SSHing into the server.
 
-Built on the Linux SDK from [Muse
-Gadgets](https://github.com/facebookincubator/muse-gadget-sdk) (Apache 2.0,
+Runs on a Raspberry Pi on your home LAN, via the [Muse Gadgets Linux
+SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache 2.0,
 vendored in `linux/`).
 
 ## Install
 
-Run it on a Raspberry Pi on the same LAN as your media server, not on the
-server itself. Pairing needs Bluetooth LE, which server blades don't have.
-The Pi pairs with your phone, then drives the *arr and Jellyfin APIs over
-HTTP.
-
-On the Pi:
+Use a Pi, not the media server itself. Pairing needs Bluetooth LE, which
+server blades don't have. The Pi pairs with your phone once, then drives
+the *arr and Jellyfin APIs over HTTP.
 
 ```sh
 sudo useradd -m muse && sudo usermod -aG docker muse
 bash linux/install.sh --from linux --run-as muse --sdk-token mgst_…
 ```
 
-Get the SDK token at gadgets.muse.ai > Account > SDK tokens.
+SDK token: gadgets.muse.ai > Account > SDK tokens.
 
-Copy `linux/media.env.example` to `/var/lib/musegadget/media.env` (as root,
-`chmod 600`) and fill in your *arr and Jellyfin URLs and API keys. Keys:
-*arr > Settings > General > Security > API Key; Jellyfin > Dashboard > API
-Keys > +.
+```sh
+sudo cp linux/media.env.example /var/lib/musegadget/media.env
+sudo chmod 600 /var/lib/musegadget/media.env
+# fill in your *arr and Jellyfin URLs and API keys
+```
 
-Then pair: Muse app > Settings > Devices > Developer mode on > + >
-`MuseGadgetXXXXXX`. Bluetooth is only needed for pairing; after that the Pi
-dials out to your Muse over an encrypted session.
+API keys: Sonarr/Radarr > Settings > General > Security. Jellyfin >
+Dashboard > API Keys > +.
+
+Pair in the Muse app: Settings > Devices > Developer mode on > + >
+`MuseGadgetXXXXXX`.
 
 ## Use
 
@@ -54,8 +53,8 @@ dials out to your Muse over an encrypted session.
 
 - `linux/src/musegadget/media.py`: the media commands (stdlib only)
 - `linux/src/musegadget/executor.py`: command specs and dispatch
-- `linux/tests/`: mocked HTTP tests, 150 passing
-- `linux/media.env.example`: config template (real keys stay on the Pi)
+- `linux/tests/`: mocked HTTP tests
+- `linux/media.env.example`: config template (keys stay on the Pi)
 
 ## Develop
 
@@ -65,8 +64,7 @@ cd linux && PYTHONPATH=src python3 -m pytest tests -q
 
 ## Provenance
 
-`linux/` is the [Muse Gadgets Linux
-SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache 2.0),
-vendored. Our changes on top are marked `# --- muse-arr ---` in
-`src/musegadget/executor.py`, plus new files `src/musegadget/media.py`,
-`tests/test_media.py`, and `media.env.example`.
+`linux/` is the Muse Gadgets Linux SDK, vendored. Our changes are marked
+`# --- muse-arr ---` in `src/musegadget/executor.py`; everything else we
+added is `src/musegadget/media.py`, `tests/test_media.py`, and
+`media.env.example`.

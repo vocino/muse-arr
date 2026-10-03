@@ -19,3 +19,6 @@ build/
 # Local secrets (never commit)
 media.env
 *.env
+
+# Test cache
+.pytest_cache/
