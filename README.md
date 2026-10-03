@@ -31,8 +31,9 @@ Account > SDK tokens, then follow Install below.
 
 ## Install
 
-New to Muse? [Join here](https://muse.ai/join), then redeem this code in
-Settings within 48 hours of signing up. We both get 1 billion bonus tokens:
+New to Muse? [muse.ai/join](https://muse.ai/join) takes an invite code in
+Settings within 48 hours of signing up: 1 billion bonus tokens for you, the
+same for the referrer. Mine is:
 
 ```
 O638HY
