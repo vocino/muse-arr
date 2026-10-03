@@ -1,4 +1,4 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
+# Copyright (c) 2026 Vocino
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -119,6 +119,12 @@ def _profile_and_root(cfg: dict, service: str) -> tuple:
         if not profiles:
             raise MediaError(f"{service}: no quality profiles found")
         profile_id = profiles[0]["id"]
+    else:
+        # media.env values are strings; the API wants an integer.
+        try:
+            profile_id = int(profile_id)
+        except (TypeError, ValueError):
+            raise MediaError("MEDIA_QUALITY_PROFILE_ID must be an integer")
     if root is None:
         folders = _arr(cfg, service, "GET", "/rootfolder")
         if not folders:

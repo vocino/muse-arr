@@ -1,4 +1,4 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
+# Copyright (c) 2026 Vocino
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -175,6 +175,22 @@ def test_unknown_action(monkeypatch):
     monkeypatch.setattr(media, "_load_config", lambda path=media.CONFIG_PATH: dict(CFG))
     with pytest.raises(MediaError, match="unsupported media action"):
         media.run("nope", {})
+
+
+def test_add_coerces_configured_profile_id_to_int(monkeypatch):
+    captured = _fake_http(monkeypatch, [
+        ("GET", "/series/lookup", SERIES_LOOKUP),
+        ("GET", "/rootfolder", [{"path": "/media/tv"}]),
+        ("POST", "/api/v3/series", {"id": 42, "title": "Severance"}),
+        ("POST", "/api/v3/command", {}),
+    ])
+    cfg = dict(CFG, MEDIA_QUALITY_PROFILE_ID="6")
+    monkeypatch.setattr(media, "_load_config", lambda path=media.CONFIG_PATH: cfg)
+    out = media.run("add", {"id": 369638, "title": "Severance"})
+    assert out == {"added": "Severance", "searching": True}
+    add_body = next(b for m, u, b in captured if u.endswith("/api/v3/series"))
+    assert add_body["qualityProfileId"] == 6
+    assert not any("/qualityprofile" in u for _, u, _ in captured)
 
 
 def test_recent_uses_configured_user_id(monkeypatch):
