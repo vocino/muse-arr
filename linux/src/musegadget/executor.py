@@ -97,6 +97,7 @@ COMMAND_SPECS = {
         "required": {},
         "optional": {},
     },
+    # --- muse-arr: our command specs (the rest of COMMAND_SPECS is upstream) ---
     "homelab.docker": {
         "description": (
             "Docker on this machine. action 'ps' (default) lists containers as "
@@ -187,6 +188,7 @@ class Executor:
                 return self.file_op(command.split(".")[1], params)
             if command == "device.health":
                 return ok(device_health())
+            # --- muse-arr: our dispatch (upstream handles the rest above) ---
             if command == "homelab.docker":
                 return self.homelab_docker(params)
             if command.startswith("media."):
@@ -259,6 +261,7 @@ class Executor:
             "duration_ms": int((time.monotonic() - started) * 1000),
         })
 
+    # --- muse-arr: our commands (upstream methods above) ---
     def homelab_docker(self, params: dict) -> dict:
         if shutil.which("docker") is None:
             return error("docker is not installed")

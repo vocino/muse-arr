@@ -10,6 +10,11 @@ vendored in `linux/`).
 
 ## Install
 
+Run it on a Raspberry Pi on the same LAN as your media server, not on the
+server itself. Pairing needs Bluetooth LE, which server blades don't have.
+The Pi pairs with your phone, then drives the *arr and Jellyfin APIs over
+HTTP.
+
 On the Pi:
 
 ```sh
@@ -57,3 +62,11 @@ dials out to your Muse over an encrypted session.
 ```sh
 cd linux && PYTHONPATH=src python3 -m pytest tests -q
 ```
+
+## Provenance
+
+`linux/` is the [Muse Gadgets Linux
+SDK](https://github.com/facebookincubator/muse-gadget-sdk) (Apache 2.0),
+vendored. Our changes on top are marked `# --- muse-arr ---` in
+`src/musegadget/executor.py`, plus new files `src/musegadget/media.py`,
+`tests/test_media.py`, and `media.env.example`.
