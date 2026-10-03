@@ -121,7 +121,9 @@ cd linux && PYTHONPATH=src python3 -m pytest tests -q
 
 ## Provenance
 
-`linux/` is the Muse Gadgets Linux SDK, vendored. Our changes are marked
-`# --- muse-arr ---` in `linux/src/musegadget/executor.py`; everything else
-we added is `linux/src/musegadget/media.py`, `linux/tests/test_media.py`,
-and `linux/media.env.example`.
+`linux/` is the Muse Gadgets Linux SDK, vendored from upstream `main`
+(verified identical to `1b56662`, 2026-10-02, except as noted below). Our
+changes are marked `# --- muse-arr ---` in
+`linux/src/musegadget/executor.py` and `linux/tests/test_executor.py`;
+everything else we added is `linux/src/musegadget/media.py`,
+`linux/tests/test_media.py`, and `linux/media.env.example`.

@@ -1,4 +1,5 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
+# Modifications copyright (c) 2026 Vocino; muse-arr changes are marked below.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -141,6 +142,7 @@ def test_device_health_reports_basics(ex):
     assert payload["version"] and payload["hostname"] and "disk_gb" in payload
 
 
+# --- muse-arr: our tests (the rest of this file is upstream) ---
 def _fake_docker(monkeypatch, stdout="", returncode=0, stderr=""):
     import subprocess
 

@@ -1,4 +1,5 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
+# Modifications copyright (c) 2026 Vocino; muse-arr changes are marked below.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +26,7 @@ import json
 import logging
 import os
 import pwd
-import re
+import re  # --- muse-arr ---
 import shutil
 import signal
 import socket
@@ -35,7 +36,7 @@ import time
 from dataclasses import dataclass
 
 from musegadget import __version__
-from musegadget import media
+from musegadget import media  # --- muse-arr ---
 
 log = logging.getLogger(__name__)
 
