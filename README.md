@@ -31,6 +31,13 @@ Account > SDK tokens, then follow Install below.
 
 ## Install
 
+New to Muse? [Join here](https://muse.ai/join), then redeem this code in
+Settings within 48 hours of signing up. We both get 1 billion bonus tokens:
+
+```
+O638HY
+```
+
 Install it on the machine running your *arr stack, or on a separate box.
 The only hard requirement is Bluetooth LE, which pairing needs. No
 Bluetooth on the server? Either plug in a USB Bluetooth adapter, or put it
